@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sign in · TaskHub</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f5f7; display: grid; place-items: center; min-height: 100vh; margin: 0; }
+    .card { background: #fff; padding: 2rem; border-radius: 8px; width: 300px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    label { display: block; margin-top: 1rem; font-size: .9rem; }
+    input { width: 100%; padding: .5rem; margin-top: .25rem; box-sizing: border-box; }
+    button { margin-top: 1.5rem; width: 100%; padding: .6rem; background: #2563eb; color: #fff; border: 0; border-radius: 4px; cursor: pointer; }
+    .error { color: #b91c1c; margin-top: 1rem; min-height: 1.2em; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Sign in</h1>
+    <form id="login-form" novalidate>
+      <label>Username <input id="username" name="username" autocomplete="username"></label>
+      <label>Password <input id="password" name="password" type="password" autocomplete="current-password"></label>
+      <button id="login-button" type="submit">Sign in</button>
+      <p id="login-error" class="error" role="alert"></p>
+    </form>
+  </main>
+  <script>
+    const VALID = { username: 'tester', password: 'secret123' };
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      if (u === VALID.username && p === VALID.password) {
+        sessionStorage.setItem('user', u);
+        location.href = 'dashboard.html';
+      } else {
+        document.getElementById('login-error').textContent = 'Invalid username or password';
+      }
+    });
+  </script>
+</body>
+</html>

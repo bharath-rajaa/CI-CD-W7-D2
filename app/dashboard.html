@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tasks · TaskHub</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f5f7; margin: 0; padding: 2rem; display: flex; justify-content: center; }
+    .app { background: #fff; width: 420px; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    .row { display: flex; gap: .5rem; align-items: center; }
+    input[type=text] { flex: 1; padding: .5rem; }
+    button { padding: .5rem .8rem; cursor: pointer; }
+    ul { list-style: none; padding: 0; margin: 1rem 0; }
+    li { display: flex; align-items: center; gap: .5rem; padding: .5rem 0; border-bottom: 1px solid #eee; }
+    li.done span { text-decoration: line-through; color: #888; }
+    li span { flex: 1; }
+    footer { display: flex; justify-content: space-between; font-size: .9rem; color: #555; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="row">
+      <h1 style="flex:1; margin:0">My tasks</h1>
+      <span id="welcome"></span>
+      <button id="logout-button">Log out</button>
+    </header>
+    <form class="row" id="add-form" style="margin-top:1rem">
+      <input type="text" id="new-todo" placeholder="What needs to be done?" aria-label="New task">
+      <button id="add-button" type="submit">Add</button>
+    </form>
+    <ul id="todo-list" data-testid="todo-list"></ul>
+    <footer>
+      <span id="items-left"></span>
+      <button id="clear-completed">Clear completed</button>
+    </footer>
+  </main>
+  <script>
+    const KEY = 'todos';
+    const user = sessionStorage.getItem('user');
+    if (!user) { location.href = 'index.html'; }
+    document.getElementById('welcome').textContent = 'Hi, ' + user;
+
+    let todos = JSON.parse(localStorage.getItem(KEY) || '[]');
+    const list = document.getElementById('todo-list');
+
+    function save() { localStorage.setItem(KEY, JSON.stringify(todos)); render(); }
+
+    function render() {
+      list.innerHTML = '';
+      todos.forEach((t, i) => {
+        const li = document.createElement('li');
+        li.dataset.testid = 'todo-item';
+        if (t.done) li.classList.add('done');
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'toggle';
+        cb.checked = t.done;
+        cb.setAttribute('aria-label', 'Mark complete: ' + t.title);
+        cb.onchange = () => { todos[i].done = cb.checked; save(); };
+
+        const span = document.createElement('span');
+        span.textContent = t.title;
+
+        const del = document.createElement('button');
+        del.className = 'destroy';
+        del.textContent = 'Delete';
+        del.setAttribute('aria-label', 'Delete ' + t.title);
+        del.onclick = () => { todos.splice(i, 1); save(); };
+
+        li.append(cb, span, del);
+        list.append(li);
+      });
+      const left = todos.filter(t => !t.done).length;
+      document.getElementById('items-left').textContent = left + ' item' + (left === 1 ? '' : 's') + ' left';
+    }
+
+    document.getElementById('add-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('new-todo');
+      const title = input.value.trim();
+      if (!title) return;
+      todos.push({ title, done: false });
+      input.value = '';
+      save();
+    });
+    document.getElementById('clear-completed').onclick = () => { todos = todos.filter(t => !t.done); save(); };
+    document.getElementById('logout-button').onclick = () => { sessionStorage.removeItem('user'); location.href = 'index.html'; };
+
+    render();
+  </script>
+</body>
+</html>
+/* x */

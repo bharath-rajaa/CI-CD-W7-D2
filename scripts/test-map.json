@@ -1,0 +1,18 @@
+{
+  "alwaysTags": ["@smoke"],
+  "unknownFileTags": ["@regression"],
+  "rules": [
+    { "path": "app/index.html", "tags": ["@regression"] },
+    { "path": "app/dashboard.html", "tags": ["@regression"] },
+    { "path": "tests/pages/", "tags": ["@regression"] },
+    { "path": "tests/fixtures.ts", "tags": ["@regression"] },
+    { "path": "tests/", "tags": ["@regression"] },
+    { "path": "playwright.config.ts", "tags": ["@regression"] },
+    { "path": "scripts/serve.mjs", "tags": ["@regression"] },
+    { "path": ".github/", "tags": ["@regression"] },
+    { "path": "package.json", "tags": ["@regression"] },
+    { "path": "docs/", "tags": [] },
+    { "path": "lab/", "tags": [] },
+    { "path": "README.md", "tags": [] }
+  ]
+}

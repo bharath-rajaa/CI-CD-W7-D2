@@ -1,0 +1,18 @@
+{
+  "name": "playwright-qa-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright lab: HTML reports, trace/screenshot artefacts, regression selection, communication of results, PR review.",
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:changed": "node scripts/select-regression.mjs --run",
+    "summary": "node scripts/summarise-results.mjs",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.0.0"
+  }
+}
