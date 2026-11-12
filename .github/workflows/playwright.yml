@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -22,7 +23,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
 
-      - name: Run tests (changed-only regression on PRs, full suite on main)
+      - name: Run tests (changed-only regression on PRs, full suite otherwise)
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             npm run test:changed -- origin/${{ github.base_ref }}
@@ -32,7 +33,9 @@ jobs:
 
       - name: Build test summary
         if: always()
-        run: npm run summary
+        run: |
+          npm run summary
+          cat test-results/summary.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload HTML report, traces and screenshots
         if: always()
